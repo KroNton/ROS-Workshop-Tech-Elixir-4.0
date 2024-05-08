@@ -124,3 +124,4 @@ To test the publisher, you need to start the ROS core and then run your publishe
 
    You should see the messages being published by your node, confirming that your ROS Publisher is working.
 
+# [Hands-On: ROS Publisher for Moving a Robot](./Hands-On:ROS-Publisher-for-Moving-a-Robot.md)
