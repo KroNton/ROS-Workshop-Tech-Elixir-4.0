@@ -113,3 +113,6 @@ If you have a publisher sending messages to the `chatter` topic (like the simple
    ```
 
    This command sends a single message to the `chatter` topic. If your subscriber is running, it should receive and log the message.
+
+
+# [Hands-On: ROS Subscriber for `LaserScan` Topic](./Hands-On:ROS-Subscriber-for-LaserScan-Topic.md)
