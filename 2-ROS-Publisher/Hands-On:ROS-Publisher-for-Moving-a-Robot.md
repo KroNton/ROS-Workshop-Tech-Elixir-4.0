@@ -52,44 +52,36 @@ Next, create a Python script that publishes messages to the `cmd_vel` topic to c
    from geometry_msgs.msg import Twist  # Message type for controlling robot velocity
 
    def move_robot():
-       # Initialize the ROS node
-       rospy.init_node('move_robot', anonymous=True)
+      # Initialize the ROS node
+      rospy.init_node('move_robot', anonymous=True)
 
-       # Create a publisher for the 'cmd_vel' topic
-       pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+      # Create a publisher for the 'cmd_vel' topic
+      pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 
-       # Create a Twist message to control linear and angular velocities
-       twist = Twist()
+      # Create a Twist message to control linear and angular velocities
+      twist = Twist()
+      # Set the publishing rate (1 Hz)
+      rate = rospy.Rate(1)  # 1 Hz
 
-       # Move forward with linear velocity
-       twist.linear.x = 0.2  # Positive value to move forward
-       twist.angular.z = 0.0  # No angular movement (no turning)
+      while not rospy.is_shutdown():
 
-       # Publish the message to move the robot forward
-       rospy.loginfo("Moving forward")
-       pub.publish(twist)
+         # Move forward with linear velocity
+         twist.linear.x = 0.2  # Positive value to move forward
+         twist.angular.z = 0.0  # No angular movement (no turning)
 
-       # Sleep for a few seconds to allow forward movement
-       rospy.sleep(2)
+         # Publish the message to move the robot forward
+         rospy.loginfo("Moving forward")
+         pub.publish(twist)
 
-       # Now set angular velocity to rotate
-       twist.linear.x = 0.0  # Stop linear movement
-       twist.angular.z = 0.5  # Positive value to rotate counterclockwise
+         rate.sleep()
 
-       # Publish the message to rotate the robot
-       rospy.loginfo("Rotating")
-       pub.publish(twist)
-
-       # Keep the rotation for a few seconds
-       rospy.sleep(2)
-
-       # Stop the robot
-       twist.angular.z = 0.0
-       pub.publish(twist)
-       rospy.loginfo("Stopping")
-
+      
    if __name__ == '__main__':
-       move_robot()
+      try:
+         move_robot()
+      except rospy.ROSInterruptException:
+         pass
+      
    ```
 
 This script initializes a ROS node, creates a publisher for the `cmd_vel` topic, and sends commands to move a robot forward and then rotate. The `geometry_msgs/Twist` message type allows you to set linear and angular velocities.

@@ -64,59 +64,7 @@ The ROS node should:
 Here's a Python script that implements this behavior:
 
 ```python
-#!/usr/bin/env python
-import rospy
-from sensor_msgs.msg import LaserScan
-from geometry_msgs.msg import Twist
 
-class ObstacleAvoidance:
-    def __init__(self):
-        rospy.init_node('topics_project_node', anonymous=True)
-        self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
-        rospy.Subscriber('/scan', LaserScan, self.scan_callback)
-        self.twist = Twist()  # To hold movement commands
-        self.rate = rospy.Rate(10)  # 10 Hz
-
-    def scan_callback(self, scan):
-        # Read the laser scan data and determine obstacles
-        ranges = scan.ranges
-        # Get front, left, and right measurements
-        front = min(ranges[330:390])  # Front region
-        left = min(ranges[30:90])  # Left region
-        right = min(ranges[-90:-30])  # Right region
-
-        # Obstacle avoidance logic
-        if front < 1.0:
-            # Obstacle in front, turn left
-            self.twist.angular.z = 0.5  # Turn left
-            self.twist.linear.x = 0
-        elif right < 1.0:
-            # Obstacle on the right, continue turning left
-            self.twist.angular.z = 0.5
-            self.twist.linear.x = 0
-        elif left < 1.0:
-            # Obstacle on the left, turn right
-            self.twist.angular.z = -0.5
-            self.twist.linear.x = 0
-        else:
-            # No obstacle, move forward
-            self.twist.linear.x = 0.5
-            self.twist.angular.z = 0
-
-        # Publish the command
-        self.pub.publish(self.twist)
-
-    def run(self):
-        while not rospy.is_shutdown():
-            self.pub.publish(self.twist)  # Ensure continuous publishing
-            self.rate.sleep()
-
-if __name__ == '__main__':
-    try:
-        node = ObstacleAvoidance()
-        node.run()
-    except rospy.ROSInterruptException:
-        pass
 ```
 
 ### Step 4: Create a Launch File

@@ -58,38 +58,32 @@ Create a Python script that subscribes to the `/scan` topic and retrieves `Laser
    from sensor_msgs.msg import LaserScan
 
    def laserscan_callback(data):
-       # Get the index for front, right, and left
-       # Assuming a 180-degree LiDAR with a 0-degree angle at the front of the robot
-       num_ranges = len(data.ranges)
-       front_idx = num_ranges // 2
-       right_idx = front_idx // 2
-       left_idx = front_idx + right_idx
 
-       # Get the range readings for front, right, and left
-       front_range = data.ranges[front_idx]
-       right_range = data.ranges[right_idx]
-       left_range = data.ranges[left_idx]
+      # Get the range readings for front, right, and left
+      front_range = data.ranges[0]
+      right_range = data.ranges[270]
+      left_range = data.ranges[90]
 
-       # Print the readings
-       rospy.loginfo(f"Front Range: {front_range:.2f} m")
-       rospy.loginfo(f"Right Range: {right_range:.2f} m")
-       rospy.loginfo(f"Left Range: {left_range:.2f} m")
+      # Print the readings
+      rospy.loginfo(f"Front Range: {front_range:.2f} m")
+      rospy.loginfo(f"Right Range: {right_range:.2f} m")
+      rospy.loginfo(f"Left Range: {left_range:.2f} m")
 
    def laserscan_subscriber():
-       # Initialize the ROS node
-       rospy.init_node('laserscan_subscriber', anonymous=True)
+      # Initialize the ROS node
+      rospy.init_node('laserscan_subscriber', anonymous=True)
 
-       # Subscribe to the /scan topic
-       rospy.Subscriber('/scan', LaserScan, laserscan_callback)
+      # Subscribe to the /scan topic
+      rospy.Subscriber('/scan', LaserScan, laserscan_callback)
 
-       # Keep the node alive until ROS is shut down
-       rospy.spin()
+      # Keep the node alive until ROS is shut down
+      rospy.spin()
 
    if __name__ == '__main__':
-       laserscan_subscriber()
+      laserscan_subscriber()
    ```
 
-This script creates a ROS node named `laserscan_subscriber` that subscribes to the `/scan` topic. The `LaserScan` message type provides an array of distance readings. The code extracts readings from the middle (front), one-quarter (right), and three-quarters (left) positions in the `ranges` array, assuming a 180-degree laser scanner.
+This script creates a ROS node named `laserscan_subscriber` that subscribes to the `/scan` topic. The `LaserScan` message type provides an array of distance readings. The code extracts readings from the middle (front), one-quarter (right), and three-quarters (left) positions in the `ranges` array, assuming a 360-degree laser scanner.
 
 ## Step 3: Run the Subscriber Node
 
